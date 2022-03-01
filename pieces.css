@@ -1,0 +1,30 @@
+.piece {
+    display: flex;
+    border: 0px;
+    padding: 0px;
+    margin : 0%;
+    height: 60px;
+    width: 60px;
+    position: absolute;
+    touch-action: none;
+    user-select: none;
+    pointer-events: all;
+    z-index: 1;
+}
+.boardDiv {
+    touch-action: none;
+    pointer-events: none;
+    user-select: none;
+}
+.square {
+    touch-action: none;
+    pointer-events: none;
+    user-select: none;
+}
+img {
+    display: flex;
+    user-select: none;
+}
+.pieceImg {
+    pointer-events: none;
+}
