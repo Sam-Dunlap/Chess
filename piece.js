@@ -49,6 +49,7 @@ class Piece {
   }
 
   update() {
+    this.prevSquare = this.square;
     this.square = this.file + this.rank.toString();
   }
 
@@ -56,5 +57,11 @@ class Piece {
     if (this.square === piece.square && this.color != piece.color){
       piece.div.remove();
     }
+  }
+
+  cancel() {
+    this.div.top = files.indexOf(this.prevSquare.charAt(0)) * 60;
+    this.div.left = this.prevSquare.charAt(1) * 60;
+    whosePly = !whosePly;
   }
 }

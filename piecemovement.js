@@ -5,21 +5,27 @@ let deltaX;
 let deltaY;
 let bbox;
 let divParentPiece;
+let whosePly = false;
 
 playBoard.addEventListener('pointerdown', userPressed, {passive: true});
 
 
 
 function userPressed(event) {
+  let toPlay;
+  if (whosePly){
+    toPlay = 'd';
+  } else {
+    toPlay = 'l';
+  }
     element = event.target;
-    if (element.classList.contains('piece')) {
-      divParentPiece = pieces.find(piece => piece.div == element);
+    divParentPiece = pieces.find(piece => piece.div == element);
+    if (element.classList.contains('piece') && divParentPiece.color === toPlay) {
         startX = event.clientX;
         startY = event.clientY;
         bbox = element.getBoundingClientRect();
         playBoard.addEventListener('pointermove', userMoved, {passive: true});
         playBoard.addEventListener('pointerup', userReleased, {passive: true});
-        console.log("i've been pressed!");
     }
 }
 
@@ -28,17 +34,18 @@ function userMoved(event) {
     deltaY = event.clientY - startY;
     element.style.left = bbox.left - 300 + deltaX + 'px';
     element.style.top = bbox.top - 100 + deltaY + 'px';
-    console.log('moving');
 }
 
 function userReleased(event) {
     let snapX = (event.clientX - 300) - event.clientX % 60;
-    let snapY = (event.clientY - 120) - event.clientY %60
+    let snapY = (event.clientY - 120) - event.clientY % 60;
     element.style.left = `${snapX}px`;
     element.style.top = `${snapY}px`;
     divParentPiece.file = files[snapX / 60];
     divParentPiece.rank = ranks[7 - snapY / 60];
-    divParentPiece.update() 
+    divParentPiece.update();
+    whosePly = makeMove();
+    //makeMove() will check if legal move. If so, whosePly flips, otherwise it does not. must return bool
     playBoard.removeEventListener('pointermove', userMoved);
     playBoard.removeEventListener('pointerup', userReleased);
 }
