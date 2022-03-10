@@ -21,11 +21,12 @@ function userPressed(event) {
     element = event.target;
     divParentPiece = pieces.find(piece => piece.div == element);
     if (element.classList.contains('piece') && divParentPiece.color === toPlay) {
-        startX = event.clientX;
-        startY = event.clientY;
-        bbox = element.getBoundingClientRect();
-        playBoard.addEventListener('pointermove', userMoved, {passive: true});
-        playBoard.addEventListener('pointerup', userReleased, {passive: true});
+      divParentPiece.legalMoves();
+      startX = event.clientX;
+      startY = event.clientY;
+      bbox = element.getBoundingClientRect();
+      playBoard.addEventListener('pointermove', userMoved, {passive: true});
+      playBoard.addEventListener('pointerup', userReleased, {passive: true});
     }
 }
 
@@ -37,15 +38,11 @@ function userMoved(event) {
 }
 
 function userReleased(event) {
-    let snapX = (event.clientX - 300) - event.clientX % 60;
-    let snapY = (event.clientY - 120) - event.clientY % 60;
-    element.style.left = `${snapX}px`;
-    element.style.top = `${snapY}px`;
-    divParentPiece.file = files[snapX / 60];
-    divParentPiece.rank = ranks[7 - snapY / 60];
-    divParentPiece.update();
-    whosePly = makeMove();
+  let snapX = (event.clientX - 300) - event.clientX % 60;
+  let snapY = (event.clientY - 120) - event.clientY % 60;
+  let isLegal = divParentPiece.checkMove(snapX, snapY);
+  whosePly = makeMove(isLegal);
     //makeMove() will check if legal move. If so, whosePly flips, otherwise it does not. must return bool
-    playBoard.removeEventListener('pointermove', userMoved);
-    playBoard.removeEventListener('pointerup', userReleased);
+  playBoard.removeEventListener('pointermove', userMoved);
+  playBoard.removeEventListener('pointerup', userReleased);
 }

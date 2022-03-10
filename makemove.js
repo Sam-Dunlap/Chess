@@ -1,21 +1,23 @@
 // false is white, true is black
+let totalPly = 0;
+let totalTurns;
 
-
-function makeMove() {
-  pieces.forEach(piece => {
-    if (divParentPiece.square == piece.square && divParentPiece.color != piece.color) {
-      divParentPiece.captured(piece);
-    } else if (divParentPiece.square == piece.square && divParentPiece.color == piece.color && divParentPiece != piece) {
-      divParentPiece.cancel();
-    }
-  });
-  if (divParentPiece.prevSquare == divParentPiece.square) {
-    divParentPiece.cancel();
+function makeMove(isLegal) {
+  if (isLegal) {
+    squares.forEach(square => square.updateOccupied());
+    return !whosePly;
+  } else {
+    return whosePly;
   }
-  //if whosePly, only black pieces can be moved
-  //check: is the landing square empty or occupied by enemy?
-  //is the path clear?
-  //is it moving into check?
-  //did the piece actually move?
-return !whosePly;
+}
+
+function getAttackedSquares(color) {
+  let attackedSquares = [];
+  pieces.forEach(piece => {
+    if (piece.color == color) {
+      attackedSquares.splice(attackedSquares.length, 0, piece.legalMoves())
+    }
+  })
+  attackedSquares.flat();
+  console.log(JSON.stringify(attackedSquares));
 }
